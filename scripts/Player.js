@@ -9,15 +9,13 @@ var Player=(function(){
             this.height = 32;
 
             this.animation=new Animation(this.width, this.height, 0, 0 , 1,
-                                         './images/hero-sprite.png', 22, 4, 4);
+                                         './images/hero-sprite.png', 9, 4, 4);
             this.boundingBox = new Rectangle(x, y, this.width, this.height);
         };
 
     Player.prototype.update = function() {
         if(this.movement.right) {
             this.position.x += this.speed;
-            this.animation.setLimit(5);
-            this.animation.setColumn(3);
         } else if(this.movement.left) {
             this.position.x -= this.speed;
         }
