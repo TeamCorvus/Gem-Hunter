@@ -28,6 +28,7 @@ var level = 0.2;
 
 //Initialise player on position x = 50, y = 50.
 var hero = new Player(32, 64);
+var chaser = new Chaser(160, 160);
 
 
 //var soldier = new Animation(32, 32, 3,0,9, 'resources/soldier.png', 8, 9, 4);
@@ -44,20 +45,29 @@ var hero = new Player(32, 64);
     }
 
     function tick (){
+		chaser.isHitObs = false;
         hero.update();
+		chaser.update();
         movePlayer();
 //        soldier.update();
 //        flower.update();
 
 
+		
+		if(hero.boundingBox.intersects(chaser.boundingBox)) {
+
+			chaser.isHit = true;
+			//when the chaser hits the hero
+		}
 
     }
 
     function render(ctx){
         ctx.clearRect(0,0,canvas.width,canvas.height);
-        renderLevel(3);
+        renderLevel(1);
 
         hero.render(ctx);
+        chaser.render(ctx);
 //        soldier.draw(ctx);
 //        flower.draw(ctx);
 
