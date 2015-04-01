@@ -1,12 +1,12 @@
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
-canvas.width = 800;
-canvas.height = 600;
-document.body.appendChild(canvas);
 
 var input = new Input();
 attachListeners(input);
+
+//MENU
+loadMenu(ctx);
 
 var levelMap = [];
 var col = Math.floor(canvas.width/32)-1;
@@ -165,6 +165,6 @@ var w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
 // Let's play game!
-
-
-update();
+function startGame() {
+    update();
+}
