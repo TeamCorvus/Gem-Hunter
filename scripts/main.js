@@ -9,9 +9,9 @@ var input = new Input();
 attachListeners(input);
 
 var levelMap = [];
-var col = canvas.width/32-1;
-var row = canvas.height/32-1;
-var level = 0.2;
+var col = Math.floor(canvas.width/32)-1;
+var row = Math.round(canvas.height/32)-1;
+var level = 0.3;
 
     for(var x = 0; x <= col; x++) {
         levelMap[x] = [];
@@ -26,17 +26,28 @@ var level = 0.2;
         }
     }
 
-//Initialise player on position x = 50, y = 50.
+//Initialise resources
 var hero = new Player(32, 64);
 var chaser = new Chaser(160, 160);
 
+function randomPosition(){
+    var a=Math.floor((Math.random() * (canvas.width/32 - 2)));
+    var b=Math.floor((Math.random() * (canvas.height/32 - 2)));
 
-//var soldier = new Animation(32, 32, 3,0,9, 'resources/soldier.png', 8, 9, 4);
-//var flower = new Animation(25, 32, 3,0,3, 'resources/flower.png', 4, 3, 4);
+        if (levelMap[a][b]){
+        randomPosition();
+    }
+    return {x:a*32, y:b*32};
+
+}
+
+var rand = (randomPosition());
+
+var gem = new Animation(32,32, 0, 0 , 6,
+    'images/gems.png',12, 6, 1);
+gem.position.set(rand.x,rand.y);
 
 
-    //hero.position.set(50,50);
-//   flower.position.set(150,150);
     function update(){
         this.tick();
         renderLevel(3);
@@ -48,9 +59,9 @@ var chaser = new Chaser(160, 160);
 		chaser.isHitObs = false;
         hero.update();
 		chaser.update();
+        gem.update();
         movePlayer();
-//        soldier.update();
-//        flower.update();
+
 
 
 		
@@ -65,11 +76,10 @@ var chaser = new Chaser(160, 160);
     function render(ctx){
         ctx.clearRect(0,0,canvas.width,canvas.height);
         renderLevel(1);
-
         hero.render(ctx);
         chaser.render(ctx);
-//        soldier.draw(ctx);
-//        flower.draw(ctx);
+        gem.draw(ctx);
+
 
 
     }

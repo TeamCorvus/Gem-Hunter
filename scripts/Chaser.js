@@ -10,8 +10,8 @@ var Chaser=(function(){
             this.width=32;
             this.height = 32;
 
-            this.animation=new Animation(this.width, this.height, 0, 0 , 1,
-                                         './images/monster.png');
+            this.animation=new Animation(this.width, this.height, 2, 0 , 3,
+                                         'images/ghost.png', 4, 3, 4);
             this.boundingBox = new Rectangle(x, y, this.width, this.height);
         };
 	var i = 0;
