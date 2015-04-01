@@ -48,7 +48,7 @@ var rand = (randomPosition());
 //    'images/gems.png',12, 6, 1);
 //gem.position.set(rand.x,rand.y);
 
-var gemV = [new Gem(rand.x, rand.y)];
+var gemV = new Gem(rand.x, rand.y);
 
     function update(){
         this.tick();
@@ -64,7 +64,7 @@ var gemV = [new Gem(rand.x, rand.y)];
 		chaser.update();
         //gem.update();
         movePlayer();
-        gemV[0].update();
+        gemV.update();
 		
 		if(hero.boundingBox.intersects(chaser.boundingBox)) {
 
@@ -72,10 +72,11 @@ var gemV = [new Gem(rand.x, rand.y)];
 			//when the chaser hits the hero
 		}
 
-        if(hero.boundingBox.intersects(gemV[0].boundingBox)) {
+        if(hero.boundingBox.intersects(gemV.boundingBox)) {
             points += 10;
-            delete gemV[0];
-            gemV = [new Gem(randomPosition().x, randomPosition().y)];
+            gemV = {};
+            gemV = new Gem(randomPosition().x, randomPosition().y);
+            chaser.speed += 1;
         }
 
     }
@@ -95,7 +96,7 @@ var gemV = [new Gem(rand.x, rand.y)];
         chaser.render(ctx);
         //gem.draw(ctx);
         updateScore(ctx);
-        gemV[0].render(ctx);
+        gemV.render(ctx);
 
     }
 function  renderLevel(lvl) {
