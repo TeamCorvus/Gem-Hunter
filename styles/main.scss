@@ -1,0 +1,16 @@
+html, body, canvas {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font: 10px 'Arial', sans-serif;
+  color: #000;
+  body {
+    text-align: center;
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
+  }
+}
