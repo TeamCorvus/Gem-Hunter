@@ -29,6 +29,7 @@ var level = 0.3;
 //Initialise resources
 var hero = new Player(32, 64);
 var chaser = new Chaser(160, 160);
+var points = 0;
 
 function randomPosition(){
     var a=Math.floor((Math.random() * (canvas.width/32 - 2)));
@@ -43,15 +44,17 @@ function randomPosition(){
 
 var rand = (randomPosition());
 
-var gem = new Animation(32,32, 0, 0 , 6,
-    'images/gems.png',12, 6, 1);
-gem.position.set(rand.x,rand.y);
+//var gem = new Animation(32,32, 0, 0 , 6,
+//    'images/gems.png',12, 6, 1);
+//gem.position.set(rand.x,rand.y);
 
+var gemV = [new Gem(rand.x, rand.y)];
 
     function update(){
         this.tick();
         renderLevel(3);
         this.render(ctx);
+        updateScore();
         requestAnimationFrame(update);
     }
 
@@ -59,11 +62,9 @@ gem.position.set(rand.x,rand.y);
 		chaser.isHitObs = false;
         hero.update();
 		chaser.update();
-        gem.update();
+        //gem.update();
         movePlayer();
-
-
-
+        gemV[0].update();
 		
 		if(hero.boundingBox.intersects(chaser.boundingBox)) {
 
@@ -71,6 +72,20 @@ gem.position.set(rand.x,rand.y);
 			//when the chaser hits the hero
 		}
 
+        if(hero.boundingBox.intersects(gemV[0].boundingBox)) {
+            points += 10;
+            delete gemV[0];
+            gemV = [new Gem(randomPosition().x, randomPosition().y)];
+        }
+
+    }
+
+    function updateScore() {
+        ctx.fillStlye = "white";
+        ctx.font = "20px Arial, sans-serif";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText("Score: " + points, 20, 10 );
     }
 
     function render(ctx){
@@ -78,9 +93,9 @@ gem.position.set(rand.x,rand.y);
         renderLevel(1);
         hero.render(ctx);
         chaser.render(ctx);
-        gem.draw(ctx);
-
-
+        //gem.draw(ctx);
+        updateScore(ctx);
+        gemV[0].render(ctx);
 
     }
 function  renderLevel(lvl) {
