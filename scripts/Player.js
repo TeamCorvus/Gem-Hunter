@@ -8,7 +8,7 @@ var Player=(function(){
             this.width=32;
             this.height = 32;
 
-            this.animation=new Animation(this.width, this.height, 0, 0 , 3,
+            this.animation=new Animation(this.width, this.height, 0, 0 , 4,
                                          'images/hero-sprite.png', 4, 4, 4);
             this.boundingBox = new Rectangle(x, y, this.width, this.height);
         }
@@ -23,6 +23,7 @@ var Player=(function(){
                 this.position.y=this.position.y;
             } else
             this.position.x += this.speed;
+            this.animation.row = 3;
 
         } else if(this.movement.left) {
 
@@ -34,6 +35,7 @@ var Player=(function(){
             } else
 
             this.position.x -= this.speed;
+            this.animation.row = 1;
         }
 
         if(this.movement.up) {
@@ -45,6 +47,8 @@ var Player=(function(){
                 this.position.y=this.position.y;
             } else
             this.position.y -= this.speed;
+            this.animation.row = 2;
+
         } else if(this.movement.down) {
             x=(Math.ceil((this.position.x)/32));
 
@@ -54,6 +58,7 @@ var Player=(function(){
                 this.position.y=this.position.y;
             } else
             this.position.y += this.speed;
+            this.animation.row = 0;
         }
 
         this.animation.position.set(this.position.x, this.position.y);
