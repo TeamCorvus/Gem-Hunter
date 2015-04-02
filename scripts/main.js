@@ -8,6 +8,11 @@ attachListeners(input);
 //MENU
 loadMenu(ctx);
 
+//SOUNDS
+var gemColectedSound = new gameSound('media/gemCollected.wav', false),
+    chaserHited = new gameSound('media/chaserHited.wav', false);
+
+
 var levelMap = [];
 var col = Math.floor(canvas.width/32)-1;
 var row = Math.round(canvas.height/32)-1;
@@ -65,15 +70,14 @@ var gemV = new Gem(rand.x, rand.y);
         //gem.update();
         movePlayer();
         gemV.update();
-		
-		if(hero.boundingBox.intersects(chaser.boundingBox)) {
 
+
+		if(hero.boundingBox.intersects(chaser.boundingBox)) {
 			chaser.isHit = true;
+            chaserHited.playSound();
 			//when the chaser hits the hero
 		}
 
-        //SOUND INTERSECT
-        var gemColectedSound = new gameSound('media/gemCollected.wav');
         if(hero.boundingBox.intersects(gemV.boundingBox)) {
             gemColectedSound.playSound();
             points += 10;
