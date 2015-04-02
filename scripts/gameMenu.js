@@ -12,7 +12,7 @@ function loadMenu(ctx) {
 
     function loadMenuBackground() {
         var menuBGImage = new Image();
-        menuBGImage.src = './images/menuBG.jpg';
+        menuBGImage.src = 'images/backgroundMenu.png';
         menuBGImage.onload = function () {
             ctx.drawImage(menuBGImage, 0, 0);
 
