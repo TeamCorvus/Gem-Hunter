@@ -79,12 +79,15 @@ function loadMenu(ctx) {
                     creditsSelected = !creditsSelected;
                     if (creditsSelected && menuIsEnabled) {
                         selectedSound.playSound();
-                        var textPosX = 300,
-                            textPosY = 400;
+                        var textPosX = 240,
+                            textPosY = 300;
 
                         var devNames = ['Dimitar Dimitrov', 'Ivan Nikolov', 'Svetlin Yotov', 'Veselin Hristov'];
                         devNames.forEach(function (name) {
-                            ctx.fillText(name, textPosX, textPosY += 30);
+                            ctx.font = '40px Consolas';
+                            ctx.fillText('<' + name + '>', textPosX, textPosY += 60);
+                            ctx.strokeStyle = '#000';
+                            ctx.strokeText('<' + name + '>', textPosX, textPosY);
                         });
                     }
                 }
