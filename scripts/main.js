@@ -12,7 +12,6 @@ loadMenu(ctx);
 var gemColectedSound = new gameSound('media/gemCollected.wav', false),
     chaserHited = new gameSound('media/chaserHited.wav', false);
 
-
 var levelMap = [];
 var col = Math.floor(canvas.width/32)-1;
 var row = Math.round(canvas.height/32)-1;
@@ -33,6 +32,7 @@ var level = 0.3;
 
 //Initialise resources
 var hero = new Player(32, 64);
+var heroLifes = 3;
 var chaser = new Chaser(160, 160);
 var points = 0;
 
@@ -78,6 +78,17 @@ var gemV = new Gem(rand.x, rand.y);
 			//when the chaser hits the hero
 		}
 
+        //HERO LIFE LEFT
+        if (chaser.isHit) {
+            heroLifes -= 1;
+            chaser.isHit = false;
+            hero.position.x = 32;
+            hero.position.y = 64;
+            if (heroLifes < 1) {
+                //TODO...GAME OVER + START AGAIN
+            }
+        }
+
         if(hero.boundingBox.intersects(gemV.boundingBox)) {
             gemColectedSound.playSound();
             points += 10;
@@ -96,6 +107,14 @@ var gemV = new Gem(rand.x, rand.y);
         ctx.fillText("Score: " + points, 20, 10 );
     }
 
+    function updateLifes() {
+        ctx.fillStlye = "white";
+        ctx.font = "20px Arial, sans-serif";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText("Life: " + heroLifes, canvas.width - 100, 10 );
+    }
+
     function render(ctx){
         ctx.clearRect(0,0,canvas.width,canvas.height);
         renderLevel(1);
@@ -103,6 +122,7 @@ var gemV = new Gem(rand.x, rand.y);
         chaser.render(ctx);
         //gem.draw(ctx);
         updateScore(ctx);
+        updateLifes();
         gemV.render(ctx);
 
     }
