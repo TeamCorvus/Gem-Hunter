@@ -1,50 +1,91 @@
 /*
-    MENU DEV STATE
-*/
+ MENU DEV STATE
+ */
 
 function loadMenu(ctx) {
+
+    var menuBGSound = new gameSound('media/menuBGSound.mp3', true);
+    menuBGSound.playSound();
+
+
     window.addEventListener("load", loadMenuBackground, true);
 
-    function loadMenuBackground(){
+    function loadMenuBackground() {
         var menuBGImage = new Image();
-        menuBGImage.src = './images/background.png';
-        menuBGImage.onload = function() {
+        menuBGImage.src = './images/menuBG.jpg';
+        menuBGImage.onload = function () {
             ctx.drawImage(menuBGImage, 0, 0);
 
             ctx.font = '30px Times New Roman';
-            ctx.fillStyle = '#FFF';
-            ctx.fillText('MENU', canvas.width / 2.35, canvas.height / 3.6);
+            ctx.strokeStyle = '#FFF';
+            ctx.strokeText('MENU', canvas.width / 2.25, canvas.height / 3.5);
+            ctx.fillStyle = '#090';
+            ctx.fillText('MENU', canvas.width / 2.25, canvas.height / 3.5);
 
-            //TEST
-            var newGame = false;
-            var newGameBox;
-            var newGameItem = 'New Game';
+            var newGameSelected = false,
+                newGameBBox,
+                newGameItem = 'New Game',
+                creditsSelected,
+                creditsBBox,
+                creditsItem = 'Credits';
 
             function menuItems() {
-                newGameBox = {
-                    x: 320,
+                newGameBBox = {
+                    x: 330,
                     y: 200,
                     w: 0,
                     h: 28
                 };
-                ctx.fillText(newGameItem, newGameBox.x, newGameBox.y + 20);
-                newGameBox.w = ctx.measureText(newGameItem).width;
+
+                ctx.fillStyle = '#FFF';
+                ctx.fillText(newGameItem, newGameBBox.x, newGameBBox.y + 20);
+                newGameBBox.w = ctx.measureText(newGameItem).width;
+
+                creditsBBox = {
+                    x: 355,
+                    y: 240,
+                    w: 0,
+                    h: 28
+                };
+
+                ctx.fillText(creditsItem, creditsBBox.x, creditsBBox.y + 20);
+                creditsBBox.w = ctx.measureText(creditsItem).width;
             }
+
             menuItems();
+            var selectedSound = new gameSound('media/selected.wav', false);
 
-            canvas.addEventListener('click', checkStart, false);
+            canvas.addEventListener('click', checkSelection, false);
+            var menuIsEnabled = true;
 
-            function checkStart(e) {
-                var p = getMousePos(e);
+            function checkSelection(event) {
+                var p = getMousePos(event);
 
-                if (p.x >= newGameBox.x && p.x <= newGameBox.x + newGameBox.w &&
-                    p.y >= newGameBox.y && p.y <= newGameBox.y + newGameBox.h) {
+                if (p.x >= newGameBBox.x && p.x <= newGameBBox.x + newGameBBox.w &&
+                    p.y >= newGameBBox.y && p.y <= newGameBBox.y + newGameBBox.h) {
 
-                    newGame = !newGame;
-                    if (newGame === true) {
+                    newGameSelected = !newGameSelected;
+                    if (newGameSelected && menuIsEnabled) {
+                        menuIsEnabled = false;
+                        selectedSound.playSound();
                         startGame();
                     } else {
                         menuItems();
+                    }
+                }
+                if (p.x >= creditsBBox.x && p.x <= creditsBBox.x + creditsBBox.w &&
+                    p.y >= creditsBBox.y && p.y <= creditsBBox.y + creditsBBox.h) {
+
+                    creditsSelected = !creditsSelected;
+                    if (creditsSelected && menuIsEnabled) {
+                        selectedSound.playSound();
+                        var textPosX = 300,
+                            textPosY = 400;
+
+                        var devNames = ['Dimitar Dimitrov', 'Ivan Nikolov', 'Svetlin Yotov', 'Veselin Hristov'];
+                        devNames.forEach(function (name) {
+                            ctx.fillText(name, textPosX, textPosY += 30);
+                        });
                     }
                 }
             }
