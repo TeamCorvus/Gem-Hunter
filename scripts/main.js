@@ -30,8 +30,9 @@ var level = 0.3;
         }
     }
 
-//Initialise resources
+//INIT RESOURCES
 var hero = new Player(32, 64);
+
 var heroLifes = 3;
 var chaser = new Chaser(160, 160);
 var points = 0;
@@ -60,7 +61,17 @@ var gemV = new Gem(rand.x, rand.y);
         renderLevel(3);
         this.render(ctx);
         updateScore();
-        requestAnimationFrame(update);
+        updateLifes();
+       if (heroLifes > 0) {
+           requestAnimationFrame(update);
+       } else {
+           ctx.fillText('TAP THE SCREEN TO RETRY...', canvas.width / 3, canvas.height / 3);
+           canvas.addEventListener('click', function() {
+               heroLifes = 3;
+               points = 0;
+               //TODO...RESTART GAME
+           });
+       }
     }
 
     function tick (){
@@ -75,7 +86,6 @@ var gemV = new Gem(rand.x, rand.y);
 		if(hero.boundingBox.intersects(chaser.boundingBox)) {
 			chaser.isHit = true;
             chaserHited.playSound();
-			//when the chaser hits the hero
 		}
 
         //HERO LIFE LEFT
@@ -112,21 +122,17 @@ var gemV = new Gem(rand.x, rand.y);
         ctx.fillText("Life: " + heroLifes, canvas.width - 100, 10 );
     }
 
-    function render(ctx){
-        //IF HERO LIFE IS GREATER THAN 0
-        if (heroLifes > 0) {
+        function render(ctx){
             ctx.clearRect(0,0,canvas.width,canvas.height);
             renderLevel(1);
             hero.render(ctx);
             chaser.render(ctx);
             //gem.draw(ctx);
             updateScore(ctx);
-            updateLifes();
+            updateLifes(ctx);
             gemV.render(ctx);
-        } else {
-            //TODO...ADD START AGAIN SCREEN
         }
-    }
+
 function  renderLevel(lvl) {
 
     var bgImage = new Image();
