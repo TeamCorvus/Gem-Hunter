@@ -1,9 +1,21 @@
-
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
 var input = new Input();
 attachListeners(input);
+
+//FULL SCREEN FUNC
+function fullScreen() {
+    if (canvas.webkitRequestFullScreen) {
+        canvas.webkitRequestFullScreen();
+    }
+    else {
+        canvas.mozRequestFullScreen();
+    }
+}
+//FULL SCREEN
+canvas.addEventListener("dblclick", fullScreen);
+
 
 //MENU
 loadMenu(ctx);
@@ -13,39 +25,38 @@ var gemColectedSound = new gameSound('media/gemCollected.wav', false),
     chaserHited = new gameSound('media/chaserHited.wav', false);
 
 var levelMap = [];
-var col = Math.floor(canvas.width/32)-1;
-var row = Math.round(canvas.height/32)-1;
+var col = Math.floor(canvas.width / 32) - 1;
+var row = Math.round(canvas.height / 32) - 1;
 var level = 0.3;
 
-    for(var x = 0; x <= col; x++) {
-        levelMap[x] = [];
-        for (var y = 0; y <= row; y++) {
-            levelMap[x][y] = false;
-        }
+for (var x = 0; x <= col; x++) {
+    levelMap[x] = [];
+    for (var y = 0; y <= row; y++) {
+        levelMap[x][y] = false;
     }
+}
 
-    for (x = 2; x < col; x += 1) {
-        for (y = 3; y < row; y += 1) {
-            levelMap[x][y] = Math.round((Math.random()-level));
-        }
+for (x = 2; x < col; x += 1) {
+    for (y = 3; y < row; y += 1) {
+        levelMap[x][y] = Math.round((Math.random() - level));
     }
+}
 
 //INIT RESOURCES
 var hero = new Player(32, 64);
 
-var heroLifes = 3;
+var heroLife = 3;
 var chaser = new Chaser(160, 160);
 var points = 0;
 
-function randomPosition(){
-    var a=Math.floor((Math.random() * (canvas.width/32 - 2)));
-    var b=Math.floor((Math.random() * (canvas.height/32 - 2)));
+function randomPosition() {
+    var a = Math.floor((Math.random() * (canvas.width / 32 - 2)));
+    var b = Math.floor((Math.random() * (canvas.height / 32 - 2)));
 
-        if (levelMap[a][b]){
+    if (levelMap[a][b]) {
         randomPosition();
     }
-    return {x:a*32, y:b*32};
-
+    return {x: a * 32, y: b * 32};
 }
 
 var rand = (randomPosition());
@@ -56,84 +67,87 @@ var rand = (randomPosition());
 
 var gemV = new Gem(rand.x, rand.y);
 
-    function update(){
-        this.tick();
-        renderLevel(3);
-        this.render(ctx);
-        updateScore();
-        updateLifes();
-       if (heroLifes > 0) {
-           requestAnimationFrame(update);
-       } else {
-           ctx.fillText('TAP THE SCREEN TO RETRY...', canvas.width / 3, canvas.height / 3);
-           canvas.addEventListener('click', function() {
-               heroLifes = 3;
-               points = 0;
-               //TODO...RESTART GAME
-           });
-       }
+function update() {
+    this.tick();
+    renderLevel(3);
+    this.render(ctx);
+    updateScore();
+    updateLifes();
+    if (heroLife > 0) {
+        requestAnimationFrame(update);
+    } else {
+        ctx.fillText('TAP THE SCREEN TO RETRY...', canvas.width / 3, canvas.height / 3);
+        canvas.addEventListener('click', function () {
+            heroLife = 3;
+            points = 0;
+            //TODO...RESTART GAME
+        });
+    }
+}
+
+function tick() {
+    chaser.isHitObs = false;
+    hero.update();
+    chaser.update();
+    //gem.update();
+    movePlayer();
+    gemV.update();
+
+
+    if (hero.boundingBox.intersects(chaser.boundingBox)) {
+        chaser.isHit = true;
+        chaserHited.playSound();
     }
 
-    function tick (){
-		chaser.isHitObs = false;
-        hero.update();
-		chaser.update();
-        //gem.update();
-        movePlayer();
-        gemV.update();
-
-
-		if(hero.boundingBox.intersects(chaser.boundingBox)) {
-			chaser.isHit = true;
-            chaserHited.playSound();
-		}
-
-        //HERO LIFE LEFT
-        if (chaser.isHit) {
-            heroLifes -= 1;
-            chaser.isHit = false;
-            hero.position.x = 32;
-            hero.position.y = 64;
-        }
-
-        if(hero.boundingBox.intersects(gemV.boundingBox)) {
-            gemColectedSound.playSound();
-            points += 10;
-            gemV = {};
-            gemV = new Gem(randomPosition().x, randomPosition().y);
-            chaser.speed += 1;
-        }
-
+    //HERO LIFE LEFT
+    if (chaser.isHit) {
+        heroLife -= 1;
+        chaser.isHit = false;
+        hero.position.x = 32;
+        hero.position.y = 64;
     }
 
-    function updateScore() {
-        ctx.fillStlye = "white";
-        ctx.font = "20px Arial, sans-serif";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "top";
-        ctx.fillText("Score: " + points, 20, 10 );
+    if (hero.boundingBox.intersects(gemV.boundingBox)) {
+        gemColectedSound.playSound();
+        points += 10;
+        gemV = {};
+        gemV = new Gem(randomPosition().x, randomPosition().y);
+        chaser.speed += 1;
     }
 
-    function updateLifes() {
-        ctx.fillStlye = "white";
-        ctx.font = "20px Arial, sans-serif";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "top";
-        ctx.fillText("Life: " + heroLifes, canvas.width - 100, 10 );
-    }
+}
 
-        function render(ctx){
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            renderLevel(1);
-            hero.render(ctx);
-            chaser.render(ctx);
-            //gem.draw(ctx);
-            updateScore(ctx);
-            updateLifes(ctx);
-            gemV.render(ctx);
-        }
+function updateScore() {
+    ctx.fillStlye = "white";
+    ctx.font = "20px Arial, sans-serif";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.fillText("Score: " + points, 20, 10);
+}
 
-function  renderLevel(lvl) {
+function updateLifes() {
+    ctx.fillStlye = "white";
+    ctx.font = "20px Arial, sans-serif";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.fillText("Life: " + heroLife, canvas.width - 100, 10);
+    ctx.font = '10px Arial';
+    ctx.strokeStyle = '#000';
+    ctx.strokeText('HINT: Double Click to turn Full Screen ON', canvas.width / 2.8, 10)
+}
+
+function render(ctx) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    renderLevel(1);
+    hero.render(ctx);
+    chaser.render(ctx);
+    //gem.draw(ctx);
+    updateScore(ctx);
+    updateLifes(ctx);
+    gemV.render(ctx);
+}
+
+function renderLevel(lvl) {
 
     var bgImage = new Image();
     var borderImage = new Image();
@@ -201,13 +215,13 @@ function  renderLevel(lvl) {
 }
 
 
-    function movePlayer() {
-        hero.movement.right = !!input.right;
-        hero.movement.left = !!input.left;
-        hero.movement.up = !!input.up;
-        hero.movement.down = !!input.down;
+function movePlayer() {
+    hero.movement.right = !!input.right;
+    hero.movement.left = !!input.left;
+    hero.movement.up = !!input.up;
+    hero.movement.down = !!input.down;
 
-    }
+}
 
 
 // Cross-browser support for requestAnimationFrame
