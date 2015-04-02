@@ -72,7 +72,10 @@ var gemV = new Gem(rand.x, rand.y);
 			//when the chaser hits the hero
 		}
 
+        //SOUND INTERSECT
+        var gemColectedSound = new gameSound('media/gemCollected.wav');
         if(hero.boundingBox.intersects(gemV.boundingBox)) {
+            gemColectedSound.playSound();
             points += 10;
             gemV = {};
             gemV = new Gem(randomPosition().x, randomPosition().y);
