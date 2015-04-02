@@ -82,7 +82,7 @@ function loadMenu(ctx) {
                         var textPosX = 240,
                             textPosY = 300;
 
-                        var devNames = ['Dimitar Dimitrov', 'Ivan Nikolov', 'Svetlin Yotov', 'Veselin Hristov'];
+                        var devNames = ['Dimitar Dimitrov', 'Ivan Nikolov', 'Svetlin Yotov', 'Veselin Hitrov'];
                         devNames.forEach(function (name) {
                             ctx.font = '40px Consolas';
                             ctx.fillText('<' + name + '>', textPosX, textPosY += 60);
