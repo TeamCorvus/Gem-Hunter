@@ -6,6 +6,7 @@ var gameSound = function(url, loop) {
 gameSound.prototype.playSound = function() {
     if (this.loop) {
         this.song.addEventListener('ended', function() {
+            this.currentTime = 0;
             this.play();
         }, false);
     }
