@@ -84,9 +84,6 @@ var gemV = new Gem(rand.x, rand.y);
             chaser.isHit = false;
             hero.position.x = 32;
             hero.position.y = 64;
-            if (heroLifes < 1) {
-                //TODO...GAME OVER + START AGAIN
-            }
         }
 
         if(hero.boundingBox.intersects(gemV.boundingBox)) {
@@ -116,15 +113,19 @@ var gemV = new Gem(rand.x, rand.y);
     }
 
     function render(ctx){
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        renderLevel(1);
-        hero.render(ctx);
-        chaser.render(ctx);
-        //gem.draw(ctx);
-        updateScore(ctx);
-        updateLifes();
-        gemV.render(ctx);
-
+        //IF HERO LIFE IS GREATER THAN 0
+        if (heroLifes > 0) {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            renderLevel(1);
+            hero.render(ctx);
+            chaser.render(ctx);
+            //gem.draw(ctx);
+            updateScore(ctx);
+            updateLifes();
+            gemV.render(ctx);
+        } else {
+            //TODO...ADD START AGAIN SCREEN
+        }
     }
 function  renderLevel(lvl) {
 
